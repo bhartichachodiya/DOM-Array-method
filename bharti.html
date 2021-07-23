@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>DOM Array Method</title>
+
+</head>
+
+<body>
+    <h1>DOM ARRAY methods</h1>
+
+    <div class="container">
+        <aside>
+            <button id="add-user">ADD User</button>
+            <button id="double">DOUBLE Money</button>
+            <button id="show-millionaires"> show millionaire</button>
+            <button id="sort">sort by richest</button>
+            <button id="calculate-wealth">Calculate entire wealth</button>
+        </aside>
+        <main id="main">
+            <h2><strong>person<strong> wealth </h2>
+      </main><br>
+      <div id="totalmoney">
+
+    </div>
+       </div>
+     
+
+
+
+<script>
+
+    const container = document.getElementById('container')
+    const add_user = document.getElementById('add-user')
+    const double = document.getElementById('double')
+    const show_millionaire = document.getElementById('show-millionaires')
+    const sort = document.getElementById('sort')
+    const calculate_wealth = document.getElementById('calculate-wealth')
+    const main = document.getElementById('main')
+    const totalwealthdata=document.getElementById('totalmoney');
+
+   
+  let data = [];
+
+  getRandomUser()
+  getRandomUser()
+
+  
+   function doubleMoney(){ 
+       data = data.map(user => {
+          return {...user,  money: user.money*2}      
+       });
+
+       updateDOM();
+   }
+
+    function showmillionaires(){
+      showmillion = data.filter(user => user.money>1000000)
+      console.log(showmillion)
+      updateDOM();
+  }
+
+     function sortRichest(){
+         var max=0;
+       data.map((key)=>{
+            if(max<key.money){
+                max=key.money
+            }
+        })
+        data=data.filter(item=>item.money==max);
+        updateDOM();
+
+     }
+     async function getRandomUser(){
+      const res = await fetch('https://randomuser.me/api/');
+       const data = await res.json()
+       console.log(data.results[0]);
+       const user = data.results[0]
+
+       const newUser = {
+
+        name:`${user.name.first}${user.name.last}`,
+        money : Math.floor(Math.random() * 1000000)
+       };
+
+       addData(newUser);
+
+    }
+   
+    
+    function addData(obj) {
+
+       data.push(obj)
+       updateDOM();
+       console.log(obj)
+      
+       
+     }
+     function wealthCalculate(){
+        var z=[]
+        data.map((key)=>{
+            z.push(key.money)
+        })
+        var sum=z.reduce((acc,value)=>{
+            return acc+value
+        })
+       updateDOM()
+       totalwealth(sum)
+   }
+      function updateDOM(){
+          providedData=data
+           main.innerHTML =  `<h2><strong>person</strong> wealth </h2>`;
+           providedData.forEach (item => {
+           const element = document.createElement('div'); 
+           element.classList.add('person'); 
+           element.innerHTML = `<h2> <strong>${item.name}</strong> ${item.money} </h2>`
+           main.appendChild(element) 
+           });
+         }
+
+         function totalwealth(sum){
+              totalwealthdata.innerHTML=`<h2><strong>total wealth</strong>${sum}</h2>`;  
+
+         }
+          add_user.addEventListener('click',getRandomUser); 
+          double.addEventListener('click', doubleMoney);
+          show_millionaire.addEventListener('click', showmillionaires)
+          sort.addEventListener('click', sortRichest)
+          calculate_wealth.addEventListener('click',wealthCalculate);
+
+
+
+
+            </script>
+
+</body>
+
+</html>
